@@ -1,5 +1,5 @@
 import * as fn from "./functions.js";
-
+console.log("Hello world")
 await fn.loginUser(); //
 // https://01.kood.tech/api/auth/signin
 await fn.main(); //
