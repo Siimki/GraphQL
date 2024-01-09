@@ -1,2 +1,2 @@
-# graphQL
-Kood/Johvi graphQL project
+GraphQL project
+
