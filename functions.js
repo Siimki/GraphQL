@@ -241,7 +241,19 @@ function renderChart() {
       },
       xaxis: {
         categories: categories,
-      }
+      },
+      responsive: [{
+        breakpoint: 1000, // applies when the screen width is <= 1000px
+        options: {
+          chart: {
+            width: '100%', // Use percentage width for responsiveness
+          },
+          legend: {
+            position: 'bottom' // Change legend position
+          },
+          // ... other options for this breakpoint
+        }
+      }]
       };
 
       var chart = new ApexCharts(document.querySelector("#chart"), options);
@@ -285,7 +297,19 @@ function renderProjectCompletionChart() {
     },
     xaxis: {
       categories: categories,
-    }
+    },
+    responsive: [{
+      breakpoint: 1000, // applies when the screen width is <= 1000px
+      options: {
+        chart: {
+          width: '100%', // Use percentage width for responsiveness
+        },
+        legend: {
+          position: 'bottom' // Change legend position
+        },
+        // ... other options for this breakpoint
+      }
+    }]
     };
 
     var chart = new ApexCharts(document.querySelector("#chart2"), options);
@@ -326,7 +350,19 @@ function renderAuditsChart() {
     },
     xaxis: {
       categories: categories,
-    }
+    },
+    responsive: [{
+      breakpoint: 1000, // applies when the screen width is <= 1000px
+      options: {
+        chart: {
+          width: '100%', // Use percentage width for responsiveness
+        },
+        legend: {
+          position: 'bottom' // Change legend position
+        },
+        // ... other options for this breakpoint
+      }
+    }]
     };
 
     var chart = new ApexCharts(document.querySelector("#chart3"), options);

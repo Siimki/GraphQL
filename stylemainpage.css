@@ -23,6 +23,7 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     padding: 20px;
     margin-bottom: 20px;
+    text-align: left; /* Align text to the left */
 }
 
 .chart-container {
@@ -35,23 +36,27 @@ h2 {
 
 @media screen and (min-width: 768px) {
     .chart-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 20px;
+        /* No need for a grid if there's only one column */
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .chart-container {
+        /* Adjustments for chart container if needed */
     }
 }
 
 .logout-button {
-    background-color: #f44336; /* Red color */
+    background-color: #f44336;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    float: right; /* Align to the right */
-    margin-right: 20px; /* Right margin */
+    float: right;
+    margin-right: 20px;
 }
 
 .logout-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
+    background-color: #d32f2f;
 }
