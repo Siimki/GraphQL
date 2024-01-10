@@ -1,23 +1,26 @@
 import * as fn from "./functions.js";
 console.log("Hello world")
-await fn.loginUser(); //
-// https://01.kood.tech/api/auth/signin
-await fn.main(); //
-await fn.addChart();
+
+// await fn.loginUser(); //
+// // https://01.kood.tech/api/auth/signin
+// await fn.main(); //
+// await fn.addChart();
 
 // login.js
 
-document.getElementById("login-form").addEventListener("submit", function (event) {
+document.getElementById("login-form").addEventListener("submit", async function (event) {
+    console.log("Login called")
     event.preventDefault();
 
     const usernameInput = document.getElementById("username").value;
     const passwordInput = document.getElementById("password").value;
-    alert(username, password)
-    console.log("Login called")
+    alert("Username: " + usernameInput + ", Password: " + passwordInput)
+   
     // Simulate a server-side authentication check
     if (authenticateUser(usernameInput, passwordInput)) {
         // Authentication successful, redirect to index.html
-        window.location.href = "index.html";
+        window.location.href = "mainpage.html";
+
     } else {
         // Authentication failed, display an error message
         alert("Invalid username or password. Please try again.");
@@ -32,3 +35,6 @@ function authenticateUser(username, password) {
 
     return username === validUsername && password === validPassword;
 }
+
+
+

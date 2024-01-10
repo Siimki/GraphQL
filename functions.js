@@ -116,10 +116,27 @@ export async function main() {
 
 
     const greeting = document.getElementById("greeting")
-    greeting.innerHTML = `Welcome to the forum ${username}`
+    if (username) {
+      greeting.innerHTML = `Welcome to the forum ${username}`
+    }
+   
     
     
 }
+
+
+
+export function logoutUser() {
+  // Clear the JWT or session storage/local storage token
+  JWT = null;
+  // If using sessionStorage or localStorage
+  // sessionStorage.removeItem('token');
+  // localStorage.removeItem('token');
+
+  // Redirect to the login page or home page
+  window.location.href = 'index.html'; // Change to your login page
+}
+
 
 function sumUpXP(data) {
     var total = 0 
@@ -187,6 +204,7 @@ export async function addChart() {
     const app = document.getElementById("app")
     renderChart()
     renderProjectCompletionChart()
+    renderAuditsChart()
     console.log("How is chart? ")
 }
 
@@ -271,6 +289,47 @@ function renderProjectCompletionChart() {
     };
 
     var chart = new ApexCharts(document.querySelector("#chart2"), options);
+    chart.render();
+  
+}
+
+function renderAuditsChart() {
+  var options = {
+      series: [{
+        name: "Desktops",
+        data: projectsCompletedPerMonth,
+    }],
+      chart: {
+      width: 700,
+      height: 300,
+      type: 'line',
+      zoom: {
+        enabled: false
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: 'straight',
+      width: 5
+    },
+    title: {
+      text: 'Audits done',
+      align: 'left'
+    },
+    grid: {
+      row: {
+        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+        opacity: 0.5
+      },
+    },
+    xaxis: {
+      categories: categories,
+    }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart3"), options);
     chart.render();
   
 }
