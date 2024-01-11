@@ -24,6 +24,19 @@ header {
     padding: 20px;
     margin-bottom: 20px;
     text-align: left; /* Align text to the left */
+
+}
+.chart-row {
+    display: flex; /* Use Flexbox */
+    align-items: center; /* Align items vertically in the middle */
+    justify-content: space-between; /* Space out items */
+}
+
+.total-xp{
+    font: bold;
+    font-size: large;
+    font-style: normal;
+    font-weight: bold;
 }
 
 .chart-container {
