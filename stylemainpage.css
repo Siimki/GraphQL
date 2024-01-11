@@ -7,7 +7,7 @@ body {
 }
 
 header {
-    background-color: #007bff;
+    background-color: rgb(31, 29, 29);
     color: white;
     text-align: center;
     padding: 10px 0;
@@ -44,7 +44,7 @@ header {
 }
 
 h2 {
-    color: #007bff;
+    color: green;
 }
 
 @media screen and (min-width: 768px) {
@@ -60,7 +60,7 @@ h2 {
 }
 
 .logout-button {
-    background-color: #f44336;
+    background-color: green;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -68,6 +68,7 @@ h2 {
     cursor: pointer;
     float: right;
     margin-right: 20px;
+    margin-top: 20px;
 }
 
 .logout-button:hover {

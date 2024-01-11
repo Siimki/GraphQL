@@ -34,10 +34,6 @@ let query = `{
   }
 }`
 
-
-
-
-
 export async function loginUser() {
     try {
         const username = "siimkiskonen@gmail.com"; 
@@ -115,25 +111,40 @@ export async function main() {
     greetUser(username)
     let auditsDone = await queryAudits("up")
     let auditsRecieved = await queryAudits("down")
-    //console.log("Audits done",auditsDone)
      auditsCompleted, auditsDoneArray = sumUpAuditsAmount(auditsDone)
      auditsRecievedPerMonth, auditsRecievedArray = sumUpAuditsAmount(auditsRecieved)
-   //console.log("call audits completed", auditsCompleted)
-    console.log("Audits Done Array ", auditsDoneArray)
-    console.log("call audits recieved", auditsRecievedPerMonth)
-    console.log("AuditsRecieved Peer month", auditsRecievedArray)
+    let sumOfAudits = summary(auditsDoneArray)
+    let sumOfAuditsGained = summary(auditsRecievedArray)
+    displayScore2("audits-total", "", sumOfAudits, " audits done. ",  sumOfAuditsGained, " Audits received");
 
+}
+
+function displayScore2(element, textBeforeFirstNumber, firstNumber, textBetweenNumbers, secondNumber, textAfterSecondNumber) {
+  const toBeDisplayed = document.getElementById(element);
+  toBeDisplayed.innerHTML = textBeforeFirstNumber + 
+                            "<span style='color: green;'>" + firstNumber + "</span>" + 
+                            textBetweenNumbers + 
+                            "<span style='color: green;'>" + secondNumber + "</span>" + 
+                            textAfterSecondNumber;
+  toBeDisplayed.style.color = 'black';
+}
+
+function summary(data) {
+  let sumOfAudits = data.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+
+  return sumOfAudits;
 }
 
 function greetUser(username) {
   const greeting = document.getElementById("greeting")
   if (username) {
-    greeting.innerHTML = `Welcome to the forum ${username}`
+    greeting.innerHTML = `Welcome to your <span style='color: green;'>01</span>/Stats, <span style='color: green;'> ${username}`
   }
 }
 
 export function logoutUser() {
-  // Clear the JWT or session storage/local storage token
   JWT = null;
   window.location.href = 'index.html'; 
 }
@@ -147,7 +158,7 @@ function sumUpAuditsAmount(data) {
   for (let i = 0; i < data.data.transaction.length; i++) {
     total += data.data.transaction[i].amount
     var monthYear = new Date(data.data.transaction[i].createdAt).toISOString().substring(0,7);
-    console.log("AUDITSAMOUNT",auditsDown[monthYear])
+
     if (auditsDown[monthYear] != 0) {
       auditsDown[monthYear]++
     } 
@@ -156,32 +167,24 @@ function sumUpAuditsAmount(data) {
 
     
   }
-  console.log("AUDITSDOWN", auditsDown)
-  var totalPerMonth
   var auditsPerMonth = pusthToArr(auditsDown)
-
-
-
-  
 
   return auditsDown, auditsPerMonth
 }
 
 function sumUpXP(data) {
-    var total = 0 
-
+    var totalXp = 0 
+    var projectsTotal = 0 
     for (var month of categories3) {
         xpPerMonth[month] = 0 
         modXpPerMonth[month] = 0
         projectsCompleted[month] = 0
-
     }
     
     for (let i = 0; i < data.data.transaction.length; i++) {
-        total += data.data.transaction[i].amount
+        totalXp += data.data.transaction[i].amount
         var monthYear = new Date(data.data.transaction[i].createdAt).toISOString().substring(0,7);
-        console.log("TEST",projectsCompleted[monthYear])
-
+        projectsTotal++
         if (projectsCompleted[monthYear] != 0) {
           projectsCompleted[monthYear]++
         }
@@ -191,27 +194,32 @@ function sumUpXP(data) {
     }
       
         var total3 = 0
-      
+
     for (const monthly in xpPerMonth) {
        console.log(xpPerMonth[monthly])
        total3 +=  xpPerMonth[monthly]
-      
-       modXpPerMonth[monthly] += total3 //
+       modXpPerMonth[monthly] += total3 
     }
 
-    
     categories = Object.keys(xpPerMonth).map(String);
     xpAmount = pusthToArr(modXpPerMonth)
     projectsCompletedPerMonth = pusthToArr(projectsCompleted)
     printer(total3)
-
-
+    console.log("TOTAL", totalXp)
+    displayScore("total-xp", "Total XP: ", totalXp);
+    displayScore("projects-total", "Projects completed: ", projectsTotal);
+    
 }
+function displayScore(element, text, number) {
+  const toBeDisplayed = document.getElementById(element);
+  toBeDisplayed.innerHTML = text + "<span style='color: green;'>" + number + "</span>";
+  toBeDisplayed.style.color = 'black';
+}
+
 
 function printer(total3) {
   console.log(xpPerMonth)
   console.log("mod", modXpPerMonth) //correct to mundo
-
   console.log("TOTAL XP++:, ", total3)
   console.log("monthYear", xpPerMonth)
   console.log("ProjectsCompleted", projectsCompleted)
@@ -234,7 +242,6 @@ export async function addChart() {
     renderChart()
     renderProjectCompletionChart()
     renderAuditsChart()
-    console.log("How is chart? ")
 }
 
 export async function queryAudits(type) {
@@ -287,7 +294,8 @@ function renderChart() {
       },
       stroke: {
         curve: 'straight',
-        width: 2
+        width: 3,
+        colors: '#008000',
       },
       title: {
         text: 'XP gained by the month',
@@ -300,7 +308,7 @@ function renderChart() {
         },
       },
       xaxis: {
-        categories: categories,
+        categories: categories2,
       },
       legend: {
         position: 'top',
@@ -346,7 +354,8 @@ function renderProjectCompletionChart() {
     },
     stroke: {
       curve: 'straight',
-      width: 2
+      width: 3,
+      colors: '#008000',
     },
     title: {
       text: 'Project completed per month',
@@ -359,7 +368,7 @@ function renderProjectCompletionChart() {
       },
     },
     xaxis: {
-      categories: categories,
+      categories: categories2,
     },
     legend: {
       position: 'top',
@@ -402,12 +411,14 @@ function renderAuditsChart() {
       show: false
     }
   },
-  colors: ['#77B6EA', '#545454'],
+  colors: ['green', '#545454'],
   dataLabels: {
     enabled: true,
   },
   stroke: {
-    curve: 'smooth'
+    curve: 'smooth',
+    width: 3,
+    colors: ['#008000' ,'#545454'],
   },
   title: {
     text: 'Audits done and recieved!',
@@ -424,10 +435,7 @@ function renderAuditsChart() {
     size: 1
   },
   xaxis: {
-    categories: categories,
-    title: {
-      text: 'Month'
-    }
+    categories: categories2,
   },
   yaxis: {
     title: {
