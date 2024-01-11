@@ -1,4 +1,3 @@
-
 var JWT
 var xpPerMonth = {};
 var modXpPerMonth = {};
@@ -34,10 +33,9 @@ let query = `{
   }
 }`
 
-export async function loginUser() {
-    try {
-        const username = "siimkiskonen@gmail.com"; 
-        const password = "68vKFrmXqW8v7@f";     
+export async function loginUser(username, password) {
+
+    try {   
         const base64Credentials = btoa(`${username}:${password}`);
         const response = await fetch("https://01.kood.tech/api/auth/signin", {
             method: "POST",
@@ -53,6 +51,7 @@ export async function loginUser() {
         console.error("error with login", error);
     } 
     return JWT
+
 }
 
 
@@ -83,7 +82,7 @@ export async function display(query) {
 }
 export async function main() {
 
-    JWT = await loginUser()
+   // JWT = await loginUser()
     data = await display(query)
     userId = data.data.user[0].id
     var queryXP = `query {
