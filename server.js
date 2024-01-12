@@ -1,12 +1,14 @@
 import * as fn from "./functions.js";
 console.log("Hello world")
 var JWT
+
 // await fn.loginUser(); //
 // // https://01.kood.tech/api/auth/signin
 // await fn.main(); //
 // await fn.addChart();
 
 // login.js
+
 
 document.getElementById("login-form").addEventListener("submit", async function (event) {
     console.log("Login called")
@@ -19,10 +21,17 @@ document.getElementById("login-form").addEventListener("submit", async function 
     
     if (await authenticateUser(usernameInput, passwordInput) == true) {
         // Authentication successful, redirect to index.html
-        window.location.href = "mainpage.html";
+        setTimeout(() => {
+            console.log("Delayed value of JWT", JWT)
+            sessionStorage.setItem('JWT', JWT);
+        }, 2000)
+        setTimeout(() => {
+            window.location.href = "mainpage.html";
+
+        },5000)
+        
     } else {
         // Authentication failed, display an error message
-
         alert("Invalid username or password. Please try again.");
     }
 });
@@ -32,14 +41,23 @@ async function authenticateUser(username, password) {
     // Replace with your authentication logic (e.g., checking against a database)
     // const username = "siimkiskonen@gmail.com"; 
     // const password = "68vKFrmXqW8v7@f";  
-    JWT = await fn.loginUser(username,password)
-    console.log(typeof JWT)
 
-    if (typeof JWT === 'string') {
-        return true;
-    } else {
+    try {
+        JWT = await fn.loginUser(username, password);
+        setTimeout(() => {
+            console.log("Delayed value of JWT", JWT)
+        }, 2000)
+        return typeof JWT === 'string';
+    } catch (error) {
+        console.error("Authentication error:", error);
         return false;
     }
+    
+}
+
+export function getJWT() {
+    console.log("Current JWT", JWT )
+    return JWT
 }
 
 

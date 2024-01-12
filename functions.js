@@ -1,7 +1,8 @@
-var JWT
+import { getJWT } from './server.js';
+let rawJWT
+let JWT = null; // JWT is managed within functions.js
 var xpPerMonth = {};
 var modXpPerMonth = {};
-var categories = new Array
 var xpAmount = new Array
 var auditsDoneArray = new Array
 var auditsRecievedArray = new Array 
@@ -10,7 +11,6 @@ var auditsCompleted
 var projectsCompleted = {}
 var projectsCompletedPerMonth = new Array 
 var auditsDown = {};
-var auditsUp = {};
 var userId = ""
 var data
 var categories2 = [
@@ -29,11 +29,18 @@ let query = `{
   user {
     id
     login
-
+    campus
+    attrs
   }
 }`
+//dateOfBirth 
+//firstname
+//lastname
+//campus
+//email
 
 export async function loginUser(username, password) {
+
 
     try {   
         const base64Credentials = btoa(`${username}:${password}`);
@@ -44,26 +51,30 @@ export async function loginUser(username, password) {
                 "Content-Type": "application/json"
             },
         });
-        JWT = await response.json();
-       console.log("This is JWT", JWT);  
+        rawJWT = await response.json();
+        JWT = rawJWT
+       console.log("This is JWT", rawJWT);  
        
     } catch (error) {
         console.error("error with login", error);
     } 
-    return JWT
+    return rawJWT
 
 }
 
 
 
 export async function display(query) {
+  const storedJWT = sessionStorage.getItem('JWT');
 
+  let newerJWT = getJWT()
+console.log("[DISPLAY]", newerJWT,rawJWT,JWT)
   try {
         const response = await fetch("https://01.kood.tech/api/graphql-engine/v1/graphql",{
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${JWT}`
+              'Authorization': `Bearer ${storedJWT}`
             },
             
             body: JSON.stringify({
@@ -80,10 +91,60 @@ export async function display(query) {
         return null;//
     }
 }
-export async function main() {
 
-   // JWT = await loginUser()
+function createProfi2le(data) {  
+  console.log(data.data.user[0].attrs.email)
+
+  //dateOfBirth 
+  //firstname
+  //lastname
+  //campus
+  //email
+
+  
+}
+
+function createProfile(data) {
+  // Assuming data is structured as per your example
+  const userData = data.data.user[0].attrs;
+
+  // Create a container for the profile information
+  const profileContainer = document.createElement('div');
+  profileContainer.className = 'profile-info';
+  const formattedBirthDate = formatDate(userData.dateOfBirth)
+  // Create and append each piece of user information
+
+  const elements = [
+    { label: 'Date of Birth', value: formattedBirthDate },
+    { label: 'First Name', value: userData.firstName },
+    { label: 'Last Name', value: userData.lastName },
+    { label: 'Campus', value: data.data.user[0].campus },
+    { label: 'Email', value: userData.email }
+  ];
+
+  elements.forEach(item => {
+    const elem = document.createElement('p');
+    elem.textContent = `${item.label}: ${item.value}`;
+    profileContainer.appendChild(elem);
+  });
+
+  // Append the profile container to the 'profile-chart' container
+  const chartContainer = document.getElementById('profile-info');
+  chartContainer.appendChild(profileContainer);
+}
+
+function formatDate(isoDateString) {
+    const date = new Date(isoDateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+export async function main() {
     data = await display(query)
+    createProfile(data)
     userId = data.data.user[0].id
     var queryXP = `query {
       transaction(
@@ -144,7 +205,8 @@ function greetUser(username) {
 }
 
 export function logoutUser() {
-  JWT = null;
+  //JWT = null;
+  sessionStorage.removeItem('JWT');
   window.location.href = 'index.html'; 
 }
 
@@ -200,10 +262,9 @@ function sumUpXP(data) {
        modXpPerMonth[monthly] += total3 
     }
 
-    categories = Object.keys(xpPerMonth).map(String);
     xpAmount = pusthToArr(modXpPerMonth)
     projectsCompletedPerMonth = pusthToArr(projectsCompleted)
-    printer(total3)
+    //printer(total3)
     console.log("TOTAL", totalXp)
     displayScore("total-xp", "Total XP: ", totalXp);
     displayScore("projects-total", "Projects completed: ", projectsTotal);
@@ -270,7 +331,7 @@ export async function queryAudits(type) {
 function renderChart() {
     var options = {
         series: [{
-          name: "Desktops",
+          name: "XP",
           data: xpAmount,
       }],
       chart: {
@@ -288,8 +349,9 @@ function renderChart() {
           show: false
         }
       },
+      colors: ['green', '#545454'],
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
         curve: 'straight',
@@ -297,9 +359,10 @@ function renderChart() {
         colors: '#008000',
       },
       title: {
-        text: 'XP gained by the month',
+        text: 'Cumulative XP',
         align: 'left'
       },
+      
       grid: {
         row: {
           colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
@@ -330,7 +393,7 @@ function renderChart() {
 function renderProjectCompletionChart() {
   var options = {
       series: [{
-        name: "Desktops",
+        name: "Projects done",
         data: projectsCompletedPerMonth,
     }],
     chart: {
@@ -347,6 +410,10 @@ function renderProjectCompletionChart() {
       toolbar: {
         show: false
       }
+    },
+    colors: ['green', '#545454'],
+    dataLabels: {
+      enabled: true,
     },
     dataLabels: {
       enabled: false
@@ -420,7 +487,7 @@ function renderAuditsChart() {
     colors: ['#008000' ,'#545454'],
   },
   title: {
-    text: 'Audits done and recieved!',
+    text: 'Audits done and recieved per month!',
     align: 'left'
   },
   grid: {
