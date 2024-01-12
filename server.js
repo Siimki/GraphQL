@@ -9,7 +9,7 @@ var JWT
 
 // login.js
 
-
+if (!window.location.href.endsWith('mainpage.html')) {
 document.getElementById("login-form").addEventListener("submit", async function (event) {
     console.log("Login called")
     event.preventDefault();
@@ -35,6 +35,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
         alert("Invalid username or password. Please try again.");
     }
 });
+}
 
 // Function to simulate server-side authentication (replace with actual authentication logic)
 async function authenticateUser(username, password) {
