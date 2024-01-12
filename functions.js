@@ -1,6 +1,6 @@
 import { getJWT } from './server.js';
 let rawJWT
-let JWT = null; // JWT is managed within functions.js
+let JWT = null;
 var xpPerMonth = {};
 var modXpPerMonth = {};
 var xpAmount = new Array
@@ -33,11 +33,6 @@ let query = `{
     attrs
   }
 }`
-//dateOfBirth 
-//firstname
-//lastname
-//campus
-//email
 
 export async function loginUser(username, password) {
 
@@ -68,7 +63,6 @@ export async function display(query) {
   const storedJWT = sessionStorage.getItem('JWT');
 
   let newerJWT = getJWT()
-console.log("[DISPLAY]", newerJWT,rawJWT,JWT)
   try {
         const response = await fetch("https://01.kood.tech/api/graphql-engine/v1/graphql",{
             method: 'POST',
@@ -92,27 +86,12 @@ console.log("[DISPLAY]", newerJWT,rawJWT,JWT)
     }
 }
 
-function createProfi2le(data) {  
-  console.log(data.data.user[0].attrs.email)
-
-  //dateOfBirth 
-  //firstname
-  //lastname
-  //campus
-  //email
-
-  
-}
-
 function createProfile(data) {
-  // Assuming data is structured as per your example
-  const userData = data.data.user[0].attrs;
 
-  // Create a container for the profile information
+  const userData = data.data.user[0].attrs;
   const profileContainer = document.createElement('div');
   profileContainer.className = 'profile-info';
   const formattedBirthDate = formatDate(userData.dateOfBirth)
-  // Create and append each piece of user information
 
   const elements = [
     { label: 'Date of Birth', value: formattedBirthDate },
@@ -128,7 +107,6 @@ function createProfile(data) {
     profileContainer.appendChild(elem);
   });
 
-  // Append the profile container to the 'profile-chart' container
   const chartContainer = document.getElementById('profile-info');
   chartContainer.appendChild(profileContainer);
 }
@@ -164,7 +142,6 @@ export async function main() {
         path
       }
     }`
-    console.log(queryXP)
     let data2 = await display(queryXP)
     let username = data.data.user[0].login
     sumUpXP(data2)
@@ -205,7 +182,6 @@ function greetUser(username) {
 }
 
 export function logoutUser() {
-  //JWT = null;
   sessionStorage.removeItem('JWT');
   window.location.href = 'index.html'; 
 }
@@ -257,7 +233,6 @@ function sumUpXP(data) {
         var total3 = 0
 
     for (const monthly in xpPerMonth) {
-       console.log(xpPerMonth[monthly])
        total3 +=  xpPerMonth[monthly]
        modXpPerMonth[monthly] += total3 
     }
@@ -265,7 +240,6 @@ function sumUpXP(data) {
     xpAmount = pusthToArr(modXpPerMonth)
     projectsCompletedPerMonth = pusthToArr(projectsCompleted)
     //printer(total3)
-    console.log("TOTAL", totalXp)
     displayScore("total-xp", "Total XP: ", totalXp);
     displayScore("projects-total", "Projects completed: ", projectsTotal);
     
@@ -291,10 +265,7 @@ function pusthToArr(data) {
   for (var value in data) {
       newArr.push(data[value] )   
   }
-
-console.log("NewArrValue", newArr)
 return newArr
-
 }
 
 export async function addChart() {
