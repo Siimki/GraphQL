@@ -21,14 +21,14 @@ document.getElementById("login-form").addEventListener("submit", async function 
     
     if (await authenticateUser(usernameInput, passwordInput) == true) {
         // Authentication successful, redirect to index.html
-        setTimeout(() => {
+
             console.log("Delayed value of JWT", JWT)
             sessionStorage.setItem('JWT', JWT);
-        }, 2000)
-        setTimeout(() => {
+
+    
             window.location.href = "mainpage.html";
 
-        },5000)
+
         
     } else {
         // Authentication failed, display an error message
